@@ -1,0 +1,264 @@
+paths:
+  /task:
+    post:
+      tags:
+        - Task
+      summary: Create a new scheduled task
+      description: |
+        Creates a new scheduled task that will execute an HTTP request at a specified time.
+        Requires authentication.
+      operationId: createTask
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Task details
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - url
+                - method
+                - scheduleTime
+              properties:
+                name:
+                  type: string
+                  description: Name of the task
+                  example: Daily Data Sync
+                url:
+                  type: string
+                  format: uri
+                  description: The URL to send the HTTP request to
+                  example: https://api.example.com/data
+                method:
+                  type: string
+                  description: HTTP method to use
+                  enum: [GET, POST, PUT, DELETE, PATCH]
+                  example: POST
+                headers:
+                  type: object
+                  description: Optional HTTP headers to include in the request
+                  additionalProperties:
+                    type: string
+                  example:
+                    Authorization: Bearer some-token
+                    Content-Type: application/json
+                token:
+                  type: string
+                  description: Optional token to use for authentication in the request
+                  example: my-api-token
+                body:
+                  type: object
+                  description: Optional request body to send (for POST/PUT/PATCH)
+                  example:
+                    key1: value1
+                    key2: value2
+                scheduledTime:
+                  type: string
+                  format: date-time
+                  description: ISO8601 date string for when to execute the task
+                  example: "2024-07-01T10:00:00Z"
+      responses:
+        '201':
+          description: Task created successfully
+        '400':
+          description: Invalid request data
+        '401':
+          description: Unauthorized - authentication required
+        '500':
+          description: Internal server error
+    get:
+      tags:
+        - Task
+      summary: Get all scheduled tasks
+      description: |
+        Returns a paginated list of all scheduled tasks for the authenticated user.
+        Requires authentication.
+      operationId: getAllTasks
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          description: Page number for pagination (default is 1)
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+          description: Number of tasks per page (default is 10)
+      responses:
+        '200':
+          description: List of scheduled tasks
+        '400':
+          description: Invalid request parameters
+        '401':
+          description: Unauthorized - authentication required
+        '500':
+          description: Internal server error
+  /task/{id}:
+    get:
+      tags:
+        - Task
+      summary: Get a scheduled task by ID
+      description: |
+        Returns the details of a scheduled task by its ID for the authenticated user.
+        Requires authentication.
+      operationId: getTaskById
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: The ID of the task to retrieve
+      responses:
+        '200':
+          description: Task details
+        '404':
+          description: Task not found
+        '401':
+          description: Unauthorized - authentication required
+        '500':
+          description: Internal server error
+    put:
+      tags:
+        - Task
+      summary: Update a scheduled task
+      description: |
+        Updates the details of a scheduled task by its ID for the authenticated user.
+        Only the fields provided in the request body will be updated.
+        Requires authentication.
+      operationId: updateTask
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: The ID of the task to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Name of the task
+                  example: "Send report"
+                url:
+                  type: string
+                  description: The URL to call
+                  example: "https://api.example.com/report"
+                method:
+                  type: string
+                  description: HTTP method to use
+                  example: "POST"
+                  enum: [GET, POST, PUT, PATCH, DELETE]
+                headers:
+                  type: object
+                  description: Optional headers to include in the request
+                  example:
+                    Authorization: Bearer token
+                    Content-Type: application/json
+                token:
+                  type: string
+                  description: Optional token to use for authentication in the request
+                  example: my-api-token
+                body:
+                  type: object
+                  description: Optional request body to send (for POST/PUT/PATCH)
+                  example:
+                    key1: value1
+                    key2: value2
+                scheduledTime:
+                  type: string
+                  format: date-time
+                  description: ISO8601 date string for when to execute the task
+                  example: "2024-07-01T10:00:00Z"
+                maxRetry:
+                  type: integer
+                  description: Maximum number of retry attempts
+                  minimum: 1
+                  maximum: 10
+                  example: 3
+            required: []
+      responses:
+        '200':
+          description: Task updated successfully
+        '400':
+          description: Invalid request data
+        '401':
+          description: Unauthorized - authentication required
+        '404':
+          description: Task not found
+        '500':
+          description: Internal server error
+    delete:
+      tags:
+        - Task
+      summary: Delete a scheduled task
+      description: |
+        Deletes a scheduled task by its ID for the authenticated user.
+        Requires authentication.
+      operationId: deleteTask
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: The ID of the task to delete
+      responses:
+        '200':
+          description: Task deleted successfully
+        '401':
+          description: Unauthorized - authentication required
+        '404':
+          description: Task not found
+        '500':
+          description: Internal server error
+  /task/{id}/history:
+    get:
+      tags:
+        - Task
+      summary: Get the history of a scheduled task
+      description: |
+        Retrieves the history of a scheduled task by its ID for the authenticated user.
+        Requires authentication.
+      operationId: getTaskHistory
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: The ID of the task to retrieve history for
+      responses:
+        '200':
+          description: Task history retrieved successfully
+        '401':
+          description: Unauthorized - authentication required
+        '404':
+          description: Task or history not found
+        '500':
+          description: Internal server error
+
