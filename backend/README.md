@@ -1,7 +1,31 @@
-# Task Scheduling System
+# 🔧 **Backend - Task Scheduling System**
 
-## Overview
-This system implements a robust task scheduling mechanism using Agenda.js with MongoDB for job persistence. Users can create HTTP ping tasks that will be executed at specified times with automatic retry logic and email notifications.
+Node.js/Express backend API for the Task Scheduling & Monitoring System with robust task execution, comprehensive error handling, and scalable architecture.
+
+## 📋 **Table of Contents**
+
+- [Overview](#-overview)
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Getting Started](#-getting-started)
+- [Project Structure](#-project-structure)
+- [API Documentation](#-api-documentation)
+- [Database Schema](#-database-schema)
+- [Development Guide](#-development-guide)
+- [Task Execution Engine](#-task-execution-engine)
+- [Security](#-security)
+- [Testing](#-testing)
+- [Deployment](#-deployment)
+
+## 🎯 **Overview**
+
+The backend is built with **Node.js** and **Express.js** and provides:
+- **RESTful API** for task management
+- **JWT Authentication** with secure token handling
+- **Task Execution Engine** with retry logic
+- **Database Management** with Sequelize ORM
+- **Comprehensive Logging** and error tracking
+- **API Documentation** with Swagger
 
 ## Features
 
